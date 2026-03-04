@@ -31,8 +31,9 @@ final class MLXPETests: XCTestCase {
         let a = MLXArray([3.0, 0.0, 0.0] as [Float])
         let b = MLXArray([5.0, 0.0, 0.0] as [Float])
         let score = PECore.similarity(a, b)
-        XCTAssertEqual(score.item(Float.self), 1.0, accuracy: 1e-5,
-                       "Parallel vectors must have similarity 1 regardless of magnitude")
+        XCTAssertEqual(
+            score.item(Float.self), 1.0, accuracy: 1e-5,
+            "Parallel vectors must have similarity 1 regardless of magnitude")
     }
 
     func testSimilarityBatchVector() {
