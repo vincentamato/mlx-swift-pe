@@ -1,0 +1,31 @@
+{
+  "model_name": "PE-Core-T16-384",
+  "vision": {
+    "image_size": 384,
+    "patch_size": 16,
+    "width": 192,
+    "layers": 12,
+    "heads": 3,
+    "mlp_ratio": 4.0,
+    "output_dim": 512,
+    "use_class_token": true,
+    "use_abs_posemb": true,
+    "use_rope2d": true,
+    "use_ln_pre": true,
+    "use_ln_post": true,
+    "pool_type": "attn",
+    "attn_pooler_heads": 8
+  },
+  "text": {
+    "context_length": 32,
+    "vocab_size": 49408,
+    "width": 512,
+    "heads": 8,
+    "layers": 12,
+    "mlp_ratio": 4.0,
+    "output_dim": 512,
+    "pool_type": "argmax",
+    "pad_id": 0
+  },
+  "initial_logit_scale": 2.659260036932778
+}

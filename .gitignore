@@ -1,0 +1,37 @@
+# macOS
+.DS_Store
+
+# Swift / Xcode
+/.build
+/Packages
+.swiftpm/
+xcuserdata/
+DerivedData/
+.swiftpm/xcode/package.xcworkspace/contents.xcworkspacedata
+.swiftpm/xcode/package.xcworkspace/xcshareddata/
+*.xcodeproj
+*.playground
+
+# Model weights and model artifacts (do not commit)
+Models/
+pe-core-*-mlx/
+*.safetensors
+*.gguf
+
+# Build artifacts
+output/
+*.o
+*.dylib
+
+# Local-only references
+.reference/
+
+# Video files
+.assets/
+*.mp4
+*.mov
+*.avi
+
+# Python caches
+__pycache__/
+*.pyc
