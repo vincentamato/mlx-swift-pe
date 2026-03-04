@@ -35,3 +35,9 @@ output/
 # Python caches
 __pycache__/
 *.pyc
+
+# Generated test resources (re-create via scripts/generate_reference_outputs.py)
+Tests/MLXPETests/Resources/Model/*.safetensors
+Tests/MLXPETests/Resources/ReferenceOutputs/*.npy
+Tests/MLXPETests/Resources/ReferenceOutputs/*.json
+Tests/MLXPETests/Resources/Model/config.json
