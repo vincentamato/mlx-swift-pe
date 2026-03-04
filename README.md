@@ -1,6 +1,6 @@
 # MLX Perception Encoder
 
-MLX Swift implementation of Meta's [Perception Encoder (PE Core)](https://github.com/facebookresearch/perception_models) for on-device image and video search on Apple Silicon. Currently, only the PE Core checkpoints are supported.
+MLX Swift implementation of Meta's [Perception Encoder](https://github.com/facebookresearch/perception_models) for on-device image and video search on Apple Silicon. Currently, only the PE Core checkpoints are supported.
 
 ## Supported Models
 
