@@ -54,12 +54,8 @@ struct Search: ParsableCommand {
         let stacked = concatenated(pooledVectors, axis: 0)
         eval(stacked)
 
-        // L2-normalize each row
-        let norms = sqrt(sum(stacked * stacked, axis: 1, keepDims: true) + Float(1e-12))
-        let normalized = stacked / norms
-
-        // Cosine similarities: [S, D] @ [D, 1] -> [S, 1], squeeze to [S]
-        let scores = matmul(normalized, queryVector.reshaped(-1, 1)).squeezed(axis: 1)
+        // Cosine similarities: [S, D] × [D] -> [S]
+        let scores = PECore.similarity(stacked, queryVector)
         eval(scores)
 
         // Collect and rank results

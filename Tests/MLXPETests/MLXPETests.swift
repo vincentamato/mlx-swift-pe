@@ -11,6 +11,54 @@ final class MLXPETests: XCTestCase {
         XCTAssertEqual(PECoreVariant.giant.configuration.vision.useClassToken, false)
     }
 
+    // MARK: - Similarity
+
+    func testSimilarityIdenticalVectors() {
+        let v = MLXArray([1.0, 0.0, 0.0] as [Float])
+        let score = PECore.similarity(v, v)
+        XCTAssertEqual(score.ndim, 0, "scalar output for 1-D × 1-D")
+        XCTAssertEqual(score.item(Float.self), 1.0, accuracy: 1e-5)
+    }
+
+    func testSimilarityOrthogonalVectors() {
+        let a = MLXArray([1.0, 0.0, 0.0] as [Float])
+        let b = MLXArray([0.0, 1.0, 0.0] as [Float])
+        let score = PECore.similarity(a, b)
+        XCTAssertEqual(score.item(Float.self), 0.0, accuracy: 1e-5)
+    }
+
+    func testSimilarityNonUnitNorm() {
+        let a = MLXArray([3.0, 0.0, 0.0] as [Float])
+        let b = MLXArray([5.0, 0.0, 0.0] as [Float])
+        let score = PECore.similarity(a, b)
+        XCTAssertEqual(score.item(Float.self), 1.0, accuracy: 1e-5,
+                       "Parallel vectors must have similarity 1 regardless of magnitude")
+    }
+
+    func testSimilarityBatchVector() {
+        // [B, D] × [D] -> [B]
+        let batch = MLXArray([1.0, 0.0, 0.0, 0.0, 1.0, 0.0] as [Float]).reshaped(2, 3)
+        let query = MLXArray([1.0, 0.0, 0.0] as [Float])
+        let scores = PECore.similarity(batch, query)
+        XCTAssertEqual(scores.shape, [2])
+        let values: [Float] = scores.asArray(Float.self)
+        XCTAssertEqual(values[0], 1.0, accuracy: 1e-5)
+        XCTAssertEqual(values[1], 0.0, accuracy: 1e-5)
+    }
+
+    func testSimilarityBatchBatch() {
+        // [B, D] × [B, D] -> [B, B]
+        let a = MLXArray([1.0, 0.0, 0.0, 1.0] as [Float]).reshaped(2, 2)
+        let b = MLXArray([1.0, 0.0, 0.0, 1.0] as [Float]).reshaped(2, 2)
+        let scores = PECore.similarity(a, b)
+        XCTAssertEqual(scores.shape, [2, 2])
+        // Diagonal should be 1, off-diagonal 0
+        XCTAssertEqual(scores[0, 0].item(Float.self), 1.0, accuracy: 1e-5)
+        XCTAssertEqual(scores[0, 1].item(Float.self), 0.0, accuracy: 1e-5)
+        XCTAssertEqual(scores[1, 0].item(Float.self), 0.0, accuracy: 1e-5)
+        XCTAssertEqual(scores[1, 1].item(Float.self), 1.0, accuracy: 1e-5)
+    }
+
     func testForwardShapesTiny() {
         let config = PECoreConfiguration.tiny
         let model = PECoreModel(config: config)

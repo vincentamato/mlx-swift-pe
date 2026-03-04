@@ -180,6 +180,47 @@ public final class PECore {
         return model.encodeText(tokenTensor, normalize: true)
     }
 
+    // MARK: - Similarity
+
+    private static func l2Normalize(_ x: MLXArray, epsilon: Float = 1e-12) -> MLXArray {
+        let norm = sqrt(sum(x * x, axis: -1, keepDims: true) + epsilon)
+        return x / norm
+    }
+
+    /// Computes cosine similarity between two embedding tensors.
+    ///
+    /// Both inputs are L2-normalized before the dot product, so pre-normalized
+    /// and unnormalized (e.g. mean-pooled) embeddings are handled correctly.
+    ///
+    /// Supported shape combinations:
+    /// - `[D]` × `[D]` → scalar
+    /// - `[B, D]` × `[D]` → `[B]`
+    /// - `[B, D]` × `[B, D]` → `[B, B]`
+    ///
+    /// - Parameters:
+    ///   - a: First embedding tensor.
+    ///   - b: Second embedding tensor.
+    /// - Returns: Cosine similarity scores.
+    public static func similarity(_ a: MLXArray, _ b: MLXArray) -> MLXArray {
+        let aWas1D = a.ndim == 1
+        let bWas1D = b.ndim == 1
+
+        let aNorm = l2Normalize(aWas1D ? a.reshaped(1, -1) : a)
+        let bNorm = l2Normalize(bWas1D ? b.reshaped(1, -1) : b)
+
+        var result = matmul(aNorm, bNorm.T)
+
+        if aWas1D && bWas1D {
+            result = result.squeezed()
+        } else if aWas1D {
+            result = result.squeezed(axis: 0)
+        } else if bWas1D {
+            result = result.squeezed(axis: -1)
+        }
+
+        return result
+    }
+
     func forwardWithDebug(image: MLXArray, text: MLXArray) -> (
         image: VisionDebugOutputs,
         text: TextDebugOutputs,
