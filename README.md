@@ -1,8 +1,6 @@
 # MLX Perception Encoder
 
-MLX Swift implementation of Meta's [Perception Encoder (PE Core)](https://github.com/facebookresearch/perception_models) for on-device image and video search on Apple Silicon.
-
-PE Core is a CLIP-style dual-encoder that produces L2-normalized embeddings for images and text, enabling zero-shot classification, retrieval, and video search entirely on-device via [MLX](https://github.com/ml-explore/mlx-swift).
+MLX Swift implementation of Meta's [Perception Encoder (PE Core)](https://github.com/facebookresearch/perception_models) for on-device image and video search on Apple Silicon. Currently, only the PE Core checkpoints are supported.
 
 ## Supported Models
 
